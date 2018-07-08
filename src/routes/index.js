@@ -3,13 +3,8 @@ import OrderBooks from '../lib/orderBooks';
 
 const router = express.Router();
 
-router.get('/:marketPair', async (req, res, next) => {
-  try {
-    const books = await OrderBooks.getAll(req.params.marketPair);
-    res.json(books);
-  } catch (err) {
-    res.json({ error: `Error: ${err}` });
-  }
+router.get('/', (req, res, next) => {
+  res.json({ message: 'Connected to market' });
 });
 
 export default router;

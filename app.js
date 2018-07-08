@@ -10,8 +10,24 @@ const app = express();
 const server = Server(app);
 const io = require('socket.io')(server);
 
+import OrderBooks from './src/lib/orderBooks';
+
 io.on('connection', (socket) => {
-  socket.emit('testData', { hello: 'world' });
+  let intervalId;
+
+  socket.on('marketPair', async (marketPair) => {
+    clearInterval(intervalId);
+    socket.emit('newData', await OrderBooks.getAll(marketPair));
+
+    intervalId = setInterval(async () => {
+      const books = await OrderBooks.getAll(marketPair);
+      socket.emit('newData', books);
+    }, 3000);
+  })
+
+  socket.on('disconnect', () => {
+    clearInterval(intervalId);
+  })
 });
 
 app.use(logger('dev'));
@@ -37,6 +53,6 @@ app.use((err, req, res, next) => {
   res.json({ message: `Error: ${err}` });
 });
 
-server.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 4000);
 
 export default app;
