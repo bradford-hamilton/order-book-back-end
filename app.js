@@ -4,8 +4,15 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import indexRouter from './src/routes/index';
+import { Server } from 'http';
 
 const app = express();
+const server = Server(app);
+const io = require('socket.io')(server);
+
+io.on('connection', (socket) => {
+  socket.emit('testData', { hello: 'world' });
+});
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -30,6 +37,6 @@ app.use((err, req, res, next) => {
   res.json({ message: `Error: ${err}` });
 });
 
-app.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 3000);
 
 export default app;
