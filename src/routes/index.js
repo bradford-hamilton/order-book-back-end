@@ -1,9 +1,16 @@
 import express from 'express';
+import OrderBooks from '../lib/orderBooks';
 
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-  res.send('initial set up');
+router.get('/:marketPair', async (req, res, next) => {
+  try {
+    const books = await OrderBooks.getAll(req.params.marketPair);
+
+    res.json(books);
+  } catch (err) {
+    res.json({ error: `Error: ${err}` });
+  }
 });
 
 export default router;
