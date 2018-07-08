@@ -25,9 +25,9 @@ app.use((err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
+  // render error
   res.status(err.status || 500);
-  res.render('error');
+  res.json({ message: `Error: ${err}` });
 });
 
 app.listen(process.env.PORT || 3000);
