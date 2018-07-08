@@ -1,4 +1,5 @@
 import axios from 'axios';
+import OrderFormatter from './OrderFormatter';
 import { BITTREX_BASE_URL, POLONIEX_BASE_URL } from '../constants';
 
 class OrderBooks {
@@ -9,12 +10,14 @@ class OrderBooks {
         this.getPoloniexBook(marketPair)
       ])
       .then(axios.spread((bittrexBook, poloniexBook) => {
-        return {
-          bittrexBids: bittrexBook.data.result.buy,
-          bittrexAsks: bittrexBook.data.result.sell,
-          poloniexBids: this.formatPoloniexOrders(poloniexBook.data.bids),
-          poloniexAsks: this.formatPoloniexOrders(poloniexBook.data.asks),
-        };
+        const bittrexBids = OrderFormatter.bittrex(bittrexBook.data.result.buy);
+        const bittrexAsks = OrderFormatter.bittrex(bittrexBook.data.result.sell);
+        const poloniexBids = OrderFormatter.poloniex(poloniexBook.data.bids);
+        const poloniexAsks = OrderFormatter.poloniex(poloniexBook.data.asks);
+        const allBids = OrderFormatter.mergeAndSortBids(bittrexBids, poloniexBids);
+        const allAsks = OrderFormatter.mergeAndSortAsks(bittrexAsks, poloniexAsks);
+
+        return { allBids, allAsks };
       }))
       .catch(err => ({ message: `Error: ${err}` }));
   }
@@ -25,10 +28,6 @@ class OrderBooks {
 
   static getPoloniexBook(marketPair) {
     return axios.get(`${POLONIEX_BASE_URL}${marketPair.replace(/-/g, "_")}`);
-  }
-
-  static formatPoloniexOrders(orders) {
-    return orders.map(([Rate, Quantity]) => ({ Quantity, Rate: Number(Rate) }));
   }
 }
 
