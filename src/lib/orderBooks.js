@@ -1,5 +1,5 @@
 import axios from 'axios';
-import OrderFormatter from './OrderFormatter';
+import OrderFormatter from './orderFormatter';
 import { BITTREX_BASE_URL, POLONIEX_BASE_URL } from '../constants';
 
 class OrderBooks {
