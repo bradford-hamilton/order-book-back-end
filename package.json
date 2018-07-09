@@ -9,7 +9,7 @@
     "start": "nodemon app.js --exec babel-node",
     "clean": "rm -rf dist && mkdir dist",
     "build": "npm run clean && babel . -d dist --ignore node_modules",
-    "serve": "node dist/app.js"
+    "serve": "node app.js"
   },
   "dependencies": {
     "axios": "0.18.0",
