@@ -1,5 +1,5 @@
 class OrderFormatter {
-  static bittrex(orders) {
+  static formatBittrex(orders) {
     return orders.map(order => {
       return {
         quantity: order.Quantity,
@@ -9,7 +9,7 @@ class OrderFormatter {
     });
   }
 
-  static poloniex(orders) {
+  static formatPoloniex(orders) {
     return orders.map(([Rate, Quantity]) => {
       return {
         quantity: Quantity,
@@ -19,14 +19,15 @@ class OrderFormatter {
     });
   }
 
-  static mergeAndSortBids(bittrexBids, poloniexBids) {
-    const merged = [...bittrexBids, ...poloniexBids];
-    return merged.sort((a, b) => b.rate - a.rate);
-  }
+  static mergeAndSortOrders(bittrexOrders, poloniexOrders, type) {
+    const merged = [
+      ...this.formatBittrex(bittrexOrders),
+      ...this.formatPoloniex(poloniexOrders),
+    ];
 
-  static mergeAndSortAsks(bittrexAsks, poloniexAsks) {
-    const merged = [...bittrexAsks, ...poloniexAsks];
-    return merged.sort((a, b) => a.rate - b.rate);
+    return type === 'bids' ?
+      merged.sort((a, b) => b.rate - a.rate) :
+      merged.sort((a, b) => a.rate - b.rate);
   }
 }
 

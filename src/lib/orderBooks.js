@@ -10,12 +10,16 @@ class OrderBooks {
         this.getPoloniexBook(marketPair)
       ])
       .then(axios.spread((bittrexBook, poloniexBook) => {
-        const bittrexBids = OrderFormatter.bittrex(bittrexBook.data.result.buy);
-        const bittrexAsks = OrderFormatter.bittrex(bittrexBook.data.result.sell);
-        const poloniexBids = OrderFormatter.poloniex(poloniexBook.data.bids);
-        const poloniexAsks = OrderFormatter.poloniex(poloniexBook.data.asks);
-        const allBids = OrderFormatter.mergeAndSortBids(bittrexBids, poloniexBids);
-        const allAsks = OrderFormatter.mergeAndSortAsks(bittrexAsks, poloniexAsks);
+        const allBids = OrderFormatter.mergeAndSortOrders(
+          bittrexBook.data.result.buy,
+          poloniexBook.data.bids,
+          'bids',
+        );
+        const allAsks = OrderFormatter.mergeAndSortOrders(
+          bittrexBook.data.result.sell,
+          poloniexBook.data.asks,
+          'asks',
+        );
 
         return { allBids, allAsks };
       }))

@@ -10,12 +10,14 @@ io.on('connection', (socket) => {
   let intervalId;
 
   socket.on('marketPair', async (marketPair) => {
+    let books = await OrderBooks.getAll(marketPair);
+
     clearInterval(intervalId);
-    socket.emit('newData', await OrderBooks.getAll(marketPair));
+    socket.emit('newOrders', books);
 
     intervalId = setInterval(async () => {
-      const books = await OrderBooks.getAll(marketPair);
-      socket.emit('newData', books);
+      books = await OrderBooks.getAll(marketPair);
+      socket.emit('newOrders', books);
     }, 3000);
   })
 
