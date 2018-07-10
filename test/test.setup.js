@@ -1,8 +1,8 @@
 import chai from 'chai';
 
-module.exports = function () {
+function testHelpers() {
   global.chai = chai;
   global.expect = chai.expect;
-  global.assert = chai.assert;
-  chai.should();
 }
+
+export default testHelpers;
