@@ -3,8 +3,8 @@ import OrderBooks from '../lib/orderBooks';
 
 const router = express.Router();
 
-router.get('/', (req, res, next) => {
-  res.json({ message: 'Connected to market' });
+router.get('/ping', (req, res, next) => {
+  res.send('pong').status(200);
 });
 
 export default router;
