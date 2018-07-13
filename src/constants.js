@@ -1,2 +1,4 @@
-export const BITTREX_BASE_URL = 'https://bittrex.com/api/v1.1/public/getorderbook?type=both&market=';
-export const POLONIEX_BASE_URL = 'https://poloniex.com/public?command=returnOrderBook&currencyPair=';
+require('dotenv').config();
+
+export const BITTREX_BASE_URL = process.env.BITTREX_BASE_URL;
+export const POLONIEX_BASE_URL = process.env.POLONIEX_BASE_URL;
